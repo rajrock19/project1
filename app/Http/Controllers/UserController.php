@@ -76,19 +76,16 @@ class UserController extends Controller
   
   public function getUserInfo(Request $request)
   {
-      // Validate the request to ensure 'username' is provided
       $request->validate([
           'username' => 'required|email',
       ]);
 
-      // Find the user by the provided username (email)
       $user = User::where('email', $request->input('username'))->first();
 
       if (!$user) {
           return response()->json(['error' => 'User not found'], 404);
       }
-
-      // Return the user details as JSON
+      
       return response()->json([
           'name' => $user->name,
           'username' => $user->email,

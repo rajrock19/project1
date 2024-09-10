@@ -87,49 +87,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($alluser as $data)
+                    @foreach ($alluser as $data)
                     <tr>
-                        <td>{{$loop->index+ 1}}</td>
+                        <td>{{$loop->index + 1}}</td>
                         <td>{{$data->name}}</td>
                         <td>{{$data->email}}</td>
-                        <td>{{\Carbon\Carbon::parse($data->created_at)->format('d-m-y')}}</td>
-                        <td>@if($data->status =="1") <span class="btn btn-success">Enable</span>  @elseif($data->status == "0") <span class="btn btn-danger">Disable</span>  @else <span class="btn btn-info">NA</span>  @endif</td>
-                        {{-- <td><a href="{{route('edit.user',$data->id)}}">Edit</a></td> 
-                        <td><button type="button" class="btn btn-primary" id="edit" data-toggle="modal" data-target="#exampleModal">
-                         Edit
-                          </button></td>
-
-        
+                        <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-y') }}</td>
+                        <td>
+                            @if ($data->status == "1") 
+                                <span class="btn btn-success">Enable</span>
+                            @elseif ($data->status == "0") 
+                                <span class="btn btn-danger">Disable</span>
+                            @else 
+                                <span class="btn btn-info">NA</span>
+                            @endif
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary edit-btn" 
+                                    data-toggle="modal" 
+                                    data-target="#exampleModal"
+                                    data-user-id="{{ $data->id }}">
+                                Edit
+                            </button>
+                        </td>
                     </tr>
-                    @endforeach --}}
-
-                    @foreach ($alluser as $data)
-    <tr>
-        <td>{{$loop->index + 1}}</td>
-        <td>{{$data->name}}</td>
-        <td>{{$data->email}}</td>
-        <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-y') }}</td>
-        <td>
-            @if ($data->status == "1") 
-                <span class="btn btn-success">Enable</span>
-            @elseif ($data->status == "0") 
-                <span class="btn btn-danger">Disable</span>
-            @else 
-                <span class="btn btn-info">NA</span>
-            @endif
-        </td>
-        <td>
-            <button type="button" class="btn btn-primary edit-btn" 
-                    data-toggle="modal" 
-                    data-target="#exampleModal"
-                    data-user-id="{{ $data->id }}">
-                Edit
-            </button>
-        </td>
-    </tr>
-@endforeach
+                @endforeach
 
                 </tbody>
+                {{ $alluser->links() }}
             </table>
         </div>
     
@@ -182,45 +167,6 @@
         </div>
     </div>
     
-    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                <div class="card-body">
-                    <form class="form-valide" action="{{route('user.update')}}" method="Post" enctype="multipart/form-data">
-                      @csrf
-                          <div class="row">
-                              <div class="col-md-12 col-xl-12 col-xxl-12 mb-3 form-group">
-                                  <label id="name"> Status<span class="text-danger">*</span></label>
-                                  <div class="input-group">
-                             
-                                      <select class="form-control" name="status">
-                                          <option value="" selected disabled>--Select status--</option>
-                                          <option value="1" >Enable</option>
-                                          <option value="0"  >Disable</option>
-                                      </select>
-                                  </div>
-                              </div>
-                          </div>
-                     
-                   
-                  </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Save changes</button>
-        
-            </div>
-        </form>
-          </div>
-        </div>
-      </div> --}}
     
     @elseif(auth()->user()->role == "user")
     <header class="header p-3 mb-2">
@@ -289,8 +235,6 @@ $(document).ready(function() {
         return urlParams.get(param);
     }
     let token = getQueryParam('token');
-
-    // Set the token in the hidden input field
     if (token) {
         $('#token').val(token);
     }
@@ -298,8 +242,8 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('.edit-btn').on('click', function() {
-        var userId = $(this).data('user-id'); // Get user_id from data attribute
-        $('#userId').val(userId); // Populate the hidden input in the modal
+        var userId = $(this).data('user-id'); // Getting user_id from data attribute
+        $('#userId').val(userId); 
     });
 
    $('#save').on('click', function() {
